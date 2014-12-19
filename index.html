@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+  <html>
+
+  <head>
+    <title>Screenshots</title>
+    <style type="text/css">
+    body {
+      background-color: #333;
+    }
+    button {
+      width: 64px;
+      border: solid 2px #ccc;
+    }
+
+    #output {
+      display: inline-block;
+      top: 4px;
+      position: relative;
+      border: dotted 1px #ccc;
+      padding: 2px;
+    }
+
+    body > div {
+      border: solid 1px #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <video id="video" width="320" controls="true">
+        <source src="http://vjs.zencdn.net/v/oceans.mp4">
+      </video>
+      <br>
+      <button id="btn">Capture</button>
+      <br>
+      <div id="output"></div>
+    </div>
+
+    <script>
+    var videoId = 'video';
+    var scaleFactor = 0.25;
+    var snapshots = [];
+    document.getElementById('btn').onclick = function() {
+      var capture = function(video, scaleFactor) {
+          var w = video.videoWidth * scaleFactor,
+            h = video.videoHeight * scaleFactor,
+            canvas = document.createElement('canvas'),
+            ctx = canvas.getContext('2d');
+
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(video, 0, 0, w, h);
+
+          return canvas;
+        },
+        video = document.getElementById(videoId),
+        output = document.getElementById('output');
+
+      scaleFactor = scaleFactor || 1;
+      var canvas = capture(video, scaleFactor);
+
+      canvas.onclick = function() {
+        window.open(this.toDataURL());
+      };
+      snapshots.unshift(canvas);
+      output.innerHTML = '';
+      for (var i = 0; i < 4; i++) {
+        output.appendChild(snapshots[i]);
+      }
+    };
+
+    </script>
+  </body>
+
+  </html>
